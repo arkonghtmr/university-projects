@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Определение типа для вариантов ответа -->
+    <xs:complexType name="OptionType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <!-- Определение простого типа для типов вопросов (ограничение значений) -->
+    <xs:simpleType name="QuestionEnumType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="text"/>
+            <xs:enumeration value="singleChoice"/>
+            <xs:enumeration value="multipleChoice"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Определение типа для вопроса -->
+    <xs:complexType name="QuestionType">
+        <xs:sequence>
+            <xs:element name="text" type="xs:string"/>
+            <!-- Варианты ответов необязательны (например, для текстового вопроса) -->
+            <xs:element name="options" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="option" type="OptionType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+        <xs:attribute name="type" type="QuestionEnumType" use="required"/>
+        <xs:attribute name="required" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+    <!-- Определение типа для ответа пользователя на один вопрос -->
+    <xs:complexType name="AnswerType">
+        <xs:sequence>
+            <!-- Текстовый ответ для типа 'text' -->
+            <xs:element name="value" type="xs:string" minOccurs="0"/>
+            <!-- ID выбранных вариантов для 'singleChoice' или 'multipleChoice' -->
+            <xs:element name="selectedOptionIds" minOccurs="0">
+                 <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="id" type="xs:positiveInteger" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <!-- Ссылка на ID вопроса, на который дан ответ -->
+        <xs:attribute name="questionId" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+
+    <!-- Корневой элемент: может быть либо опрос, либо ответ -->
+    <xs:element name="surveySystem">
+        <xs:complexType>
+            <xs:choice>
+                <!-- Сущность "Опрос" -->
+                <xs:element name="survey">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="title" type="xs:string"/>
+                            <xs:element name="description" type="xs:string" minOccurs="0"/>
+                            <xs:element name="questions">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="question" type="QuestionType" minOccurs="1" maxOccurs="unbounded"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+
+                <!-- Сущность "Ответ пользователя" -->
+                <xs:element name="response">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="answers">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <!-- Может быть пустой массив, если пользователь ничего не ответил -->
+                                        <xs:element name="answer" type="AnswerType" minOccurs="0" maxOccurs="unbounded"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="surveyId" type="xs:positiveInteger" use="required"/>
+                        <xs:attribute name="userId" type="xs:positiveInteger" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<surveySystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="survey_schema.xsd">
+    <response surveyId="101" userId="55">
+        <answers>
+            <answer questionId="1">
+                <selectedOptionIds>
+                    <id>2</id>
+                </selectedOptionIds>
+            </answer>
+            <answer questionId="2">
+                <value>Хотелось бы больше практических заданий.</value>
+            </answer>
+        </answers>
+    </response>
+</surveySystem>

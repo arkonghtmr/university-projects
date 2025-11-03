@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<surveySystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="survey_schema.xsd">
+    <survey id="101">
+        <title>Опрос удовлетворенности курсом</title>
+        <description>Пожалуйста, оцените наш курс.</description>
+        <questions>
+            <question id="1" type="singleChoice" required="true">
+                <text>Как вы оцениваете общую пользу курса?</text>
+                <options>
+                    <option id="1">Отлично</option>
+                    <option id="2">Хорошо</option>
+                    <option id="3">Удовлетворительно</option>
+                    <option id="4">Плохо</option>
+                </options>
+            </question>
+            <question id="2" type="text">
+                <text>Ваши предложения по улучшению?</text>
+            </question>
+        </questions>
+    </survey>
+</surveySystem>
