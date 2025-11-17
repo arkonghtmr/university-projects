@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- 1. Определение типов вопросов -->
+    <xs:simpleType name="QuestionType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="text"/>       <!-- Свободный текстовый ответ -->
+            <xs:enumeration value="singleChoice"/> <!-- Выбор одного варианта -->
+            <xs:enumeration value="multipleChoice"/> <!-- Выбор нескольких вариантов -->
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- 2. Определение структуры для варианта ответа в вопросе -->
+    <xs:complexType name="OptionType">
+        <xs:sequence>
+            <xs:element name="text" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+
+    <!-- 3. Определение основной структуры вопроса -->
+    <xs:complexType name="Question">
+        <xs:sequence>
+            <xs:element name="title" type="xs:string"/>
+            <!-- Варианты ответов необязательны (например, для текстового вопроса) -->
+            <xs:element name="options" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="option" type="OptionType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+        <xs:attribute name="type" type="QuestionType" use="required"/>
+    </xs:complexType>
+
+    <!-- 4. Определение структуры для ответа пользователя -->
+     <xs:complexType name="UserAnswer">
+        <xs:sequence>
+             <!-- Может быть текстовый ответ или ID выбранных вариантов -->
+            <xs:element name="value" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <!-- Ссылка на ID вопроса, на который дается ответ -->
+        <xs:attribute name="questionId" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+
+    <!-- 5. Корневой элемент - сама анкета и ответы на нее -->
+    <xs:element name="SurveyData">
+        <xs:complexType>
+            <xs:sequence>
+                <!-- Блок описания анкеты -->
+                <xs:element name="SurveyDefinition">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="name" type="xs:string"/>
+                            <xs:element name="description" type="xs:string"/>
+                            <xs:element name="questions">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="question" type="Question" maxOccurs="unbounded"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+
+                <!-- Блок с ответами пользователей (может быть пустым или содержать много ответов) -->
+                <xs:element name="UserResponses" minOccurs="0">
+                     <xs:complexType>
+                         <xs:sequence>
+                             <xs:element name="response" maxOccurs="unbounded">
+                                 <xs:complexType>
+                                     <xs:sequence>
+                                        <xs:element name="answer" type="UserAnswer" maxOccurs="unbounded"/>
+                                     </xs:sequence>
+                                     <xs:attribute name="userId" type="xs:string" use="required"/>
+                                 </xs:complexType>
+                             </xs:element>
+                         </xs:sequence>
+                     </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

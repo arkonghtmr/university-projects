@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SurveyData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="survey_schema.xsd">
+    <SurveyDefinition>
+        <name>Опрос</name>
+        <description>Анкета с ошибкой</description>
+        <questions>
+            <!-- Ошибка: тип "invalidType" не разрешен схемой -->
+            <question id="1" type="invalidType">
+                <title>Какой-то вопрос</title>
+            </question>
+        </questions>
+    </SurveyDefinition>
+    <UserResponses/>
+</SurveyData>

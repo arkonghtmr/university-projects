@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SurveyData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="survey_schema.xsd">
+    <SurveyDefinition>
+        <name>Опрос</name>
+        <description>Анкета с ошибкой</description>
+        <questions>
+            <!-- Ошибка: отсутствует обязательный атрибут "type" -->
+            <question id="1">
+                <title>Какой-то вопрос</title>
+            </question>
+        </questions>
+    </SurveyDefinition>
+    <UserResponses/>
+</SurveyData>

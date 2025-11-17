@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SurveyData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="survey_schema.xsd">
+    <SurveyDefinition>
+        <name>Опрос об использовании Python</name>
+        <description>Анкета для Senior Python разработчиков</description>
+        <questions>
+            <!-- Вопрос 1: Текстовый -->
+            <question id="1" type="text">
+                <title>Какой ваш любимый фреймворк для веб-разработки?</title>
+            </question>
+            <!-- Вопрос 2: Один из списка -->
+            <question id="2" type="singleChoice">
+                <title>Как часто вы используете асинхронное программирование?</title>
+                <options>
+                    <option id="1">
+                        <text>Каждый день</text>
+                    </option>
+                    <option id="2">
+                        <text>Несколько раз в неделю</text>
+                    </option>
+                    <option id="3">
+                        <text>Редко</text>
+                    </option>
+                </options>
+            </question>
+            <!-- Вопрос 3: Несколько из списка -->
+            <question id="3" type="multipleChoice">
+                <title>Какие СУБД вы использовали в проектах?</title>
+                <options>
+                    <option id="1">
+                        <text>PostgreSQL</text>
+                    </option>
+                    <option id="2">
+                        <text>MySQL</text>
+                    </option>
+                    <option id="3">
+                        <text>SQLite</text>
+                    </option>
+                    <option id="4">
+                        <text>MongoDB</text>
+                    </option>
+                </options>
+            </question>
+        </questions>
+    </SurveyDefinition>
+    <UserResponses>
+        <response userId="user123">
+            <answer questionId="1">
+                <value>FastAPI</value>
+            </answer>
+            <answer questionId="2">
+                <value>1</value> <!-- ID опции "Каждый день" -->
+            </answer>
+            <answer questionId="3">
+                <value>1</value> <!-- ID опции PostgreSQL -->
+                <value>4</value> <!-- ID опции MongoDB -->
+            </answer>
+        </response>
+        <!-- Пример ответа от другого пользователя -->
+        <response userId="user456">
+            <answer questionId="1">
+                <value>Django</value>
+            </answer>
+            <answer questionId="2">
+                <value>3</value> <!-- ID опции "Редко" -->
+            </answer>
+        </response>
+    </UserResponses>
+</SurveyData>
