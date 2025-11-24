@@ -72,7 +72,7 @@ with open(xml_filename, 'w', encoding='utf-8') as f:
     f.write(xml_string)
 print(f"Данные успешно сохранены в файл '{xml_filename}'.")
 
-# чтение данных в xml и преобразование
+# Чтение данных в xml и преобразование
 print("\nШаг 3: Чтение данных из XML и применение преобразования...")
 tree = ET.parse(xml_filename)
 root = tree.getroot()
@@ -98,7 +98,7 @@ headers = [
 ]
 
 with open(dsv_filename_single, 'w', newline='', encoding='utf-8') as f:
-    writer = csv.writer(f, delimiter='\t')
+    writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_ALL) # для кавычек на всех полях
     writer.writerow(headers)
     for user in root.findall('user'):
         user_info = [
@@ -112,29 +112,35 @@ with open(dsv_filename_single, 'w', newline='', encoding='utf-8') as f:
             reviews_list = []
             for review in publication.find('reviews'):
                 reviewer_name = review.find('reviewer_name').text
-                review_text = review.find('text').text.replace('\n', ' ')
+                # Убрал замену '\n' на пробел
+                review_text = review.find('text').text
                 reviews_list.append(f"[{reviewer_name}: {review_text}]")
-            reviews_str = '; '.join(reviews_list)
+            
+            # Объединил отзывы с помощью '\n'
+            reviews_str = '\n'.join(reviews_list)
+            
             publication_info = [
-                publication.find('title').text, publication.find('description').text.replace('\n', ' '),
+                publication.find('title').text, 
+                publication.find('description').text, # Убрал замену '\n' на пробел для описания
                 publication.find('pages').text, publication.find('category').text,
                 publication.find('publication_date').text, reviews_str
             ]
             writer.writerow(user_info + publication_info)
-print(f"Преобразованные данные успешно сохранены в единый файл '{dsv_filename_single}'.")
+print(f"Преобразованные данные успешно сохранены в файл '{dsv_filename_single}'.")
 
 print(f"\nШаг 5: Разделение файла '{dsv_filename_single}' на несколько файлов по году регистрации...")
 
 data_by_year = defaultdict(list)
 
-# Читаем созданный на предыдущем шаге файл
+# Читаю созданный файл
 with open(dsv_filename_single, 'r', newline='', encoding='utf-8') as f:
-    reader = csv.reader(f, delimiter='\t')
+    # ИЗМЕНЕНИЕ: Указываем quoting, чтобы правильно читать многострочные поля
+    reader = csv.reader(f, delimiter='\t', quoting=csv.QUOTE_ALL)
     
     header_row = next(reader)
     registration_date_index = header_row.index('registration_date') 
 
-    # Группируем данные
+    # Группирую данные
     for row in reader:
         registration_date_str = row[registration_date_index]
         year = registration_date_str[:4]
@@ -150,7 +156,7 @@ for year, rows in data_by_year.items():
     output_filename = os.path.join(output_dir, f'users_registered_{year}.dsv')
     
     with open(output_filename, 'w', newline='', encoding='utf-8') as f:
-        writer = csv.writer(f, delimiter='\t')
+        writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_ALL) # для записи многострочных полей
         writer.writerow(header_row) 
         writer.writerows(rows)      
     print(f" -> Создан файл: '{output_filename}' (записей: {len(rows)})")
