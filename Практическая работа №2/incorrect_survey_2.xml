@@ -5,7 +5,6 @@
         <name>Опрос</name>
         <description>Анкета с ошибкой</description>
         <questions>
-            <!-- Ошибка: отсутствует обязательный атрибут "type" -->
             <question id="1">
                 <title>Какой-то вопрос</title>
             </question>
