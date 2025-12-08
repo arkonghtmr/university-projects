@@ -118,7 +118,6 @@ with open(dsv_filename_single, 'w', newline='', encoding='utf-8') as f:
                 reviewer_name = review.find('reviewer_name').text
                 review_text = review.find('text').text
 
-                # ИСПРАВЛЕНИЕ: Квадратные скобки полностью убраны из форматирования
                 reviews_list.append(f"{reviewer_name}: {review_text}")
 
             reviews_str = '\n'.join(reviews_list)
