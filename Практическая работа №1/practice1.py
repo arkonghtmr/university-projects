@@ -10,8 +10,10 @@ import os
 print("Шаг 1: Генерация данных...")
 fake = Faker('ru_RU')
 
+
 def create_review(user_ids):
     return {'user_id': random.choice(user_ids), 'text': fake.text(max_nb_chars=200)}
+
 
 def create_publication(user_ids):
     return {
@@ -20,6 +22,7 @@ def create_publication(user_ids):
         'publication_date': fake.date_time_this_decade().isoformat(),
         'reviews': [create_review(user_ids) for _ in range(random.randint(0, 3))]
     }
+
 
 def create_user(user_id):
     return {
@@ -31,6 +34,7 @@ def create_user(user_id):
         'birth_date': fake.date_of_birth(minimum_age=10, maximum_age=80).isoformat(),
         'gender': random.choice(['Мужской', 'Женский']), 'publications': []
     }
+
 
 num_users = 1000
 users_data = [create_user(i) for i in range(1, num_users + 1)]
@@ -98,7 +102,7 @@ headers = [
 ]
 
 with open(dsv_filename_single, 'w', newline='', encoding='utf-8') as f:
-    writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_ALL) # для кавычек на всех полях
+    writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_ALL)
     writer.writerow(headers)
     for user in root.findall('user'):
         user_info = [
@@ -112,16 +116,16 @@ with open(dsv_filename_single, 'w', newline='', encoding='utf-8') as f:
             reviews_list = []
             for review in publication.find('reviews'):
                 reviewer_name = review.find('reviewer_name').text
-                # Убрал замену '\n' на пробел
                 review_text = review.find('text').text
-                reviews_list.append(f"[{reviewer_name}: {review_text}]")
-            
-            # Объединил отзывы с помощью '\n'
+
+                # ИСПРАВЛЕНИЕ: Квадратные скобки полностью убраны из форматирования
+                reviews_list.append(f"{reviewer_name}: {review_text}")
+
             reviews_str = '\n'.join(reviews_list)
-            
+
             publication_info = [
-                publication.find('title').text, 
-                publication.find('description').text, # Убрал замену '\n' на пробел для описания
+                publication.find('title').text,
+                publication.find('description').text,
                 publication.find('pages').text, publication.find('category').text,
                 publication.find('publication_date').text, reviews_str
             ]
@@ -134,11 +138,10 @@ data_by_year = defaultdict(list)
 
 # Читаю созданный файл
 with open(dsv_filename_single, 'r', newline='', encoding='utf-8') as f:
-    # ИЗМЕНЕНИЕ: Указываем quoting, чтобы правильно читать многострочные поля
     reader = csv.reader(f, delimiter='\t', quoting=csv.QUOTE_ALL)
-    
+
     header_row = next(reader)
-    registration_date_index = header_row.index('registration_date') 
+    registration_date_index = header_row.index('registration_date')
 
     # Группирую данные
     for row in reader:
@@ -151,14 +154,13 @@ print("Данные сгруппированы по годам. Начинаю �
 output_dir = 'split_dsv_files'
 os.makedirs(output_dir, exist_ok=True)
 
-
 for year, rows in data_by_year.items():
     output_filename = os.path.join(output_dir, f'users_registered_{year}.dsv')
-    
+
     with open(output_filename, 'w', newline='', encoding='utf-8') as f:
-        writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_ALL) # для записи многострочных полей
-        writer.writerow(header_row) 
-        writer.writerows(rows)      
+        writer = csv.writer(f, delimiter='\t', quoting=csv.QUOTE_ALL)
+        writer.writerow(header_row)
+        writer.writerows(rows)
     print(f" -> Создан файл: '{output_filename}' (записей: {len(rows)})")
 
 print(f"\nПрактическая работа завершена. Разделенные файлы находятся в папке '{output_dir}'.")
