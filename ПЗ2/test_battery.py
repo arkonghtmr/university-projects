@@ -16,86 +16,65 @@ class TestBattery(unittest.TestCase):
     # === ПОЗИТИВНЫЕ ТЕСТЫ ===
 
     def test_valid_battery_creation(self):
-        """Успешное создание объекта с полным набором корректных данных"""
         bat = Battery(self.valid_data)
         self.assertEqual(bat.brand, 'Panasonic')
         self.assertEqual(bat.weight, 28)
 
     def test_valid_battery_without_optional_field(self):
-        """Успешное создание объекта без необязательного поля"""
-        data = self.valid_data.copy()
-        del data['weight']
-        bat = Battery(data)
+        del self.valid_data['weight']
+        bat = Battery(self.valid_data)
         self.assertIsNone(bat.weight)
 
     def test_calculated_property(self):
-        """Проверка вычисляемого свойства"""
         bat = Battery(self.valid_data)
         # 2500 mAh * 1.2 V / 1000 = 3.0 Wh
         self.assertEqual(bat.energy_wh, 3.0)
 
-    # === НЕГАТИВНЫЕ ТЕСТЫ (Проверка обработки ошибок) ===
+    # === НЕГАТИВНЫЕ ТЕСТЫ ===
 
     def test_not_a_dict(self):
-        """Передача не словаря при инициализации"""
         with self.assertRaises(TypeError):
             Battery("просто строка вместо словаря")
 
     def test_missing_required_field(self):
-        """Отсутствие обязательного поля"""
-        data = self.valid_data.copy()
-        del data['capacity']
+        del self.valid_data['capacity']
         with self.assertRaises(ValueError):
-            Battery(data)
+            Battery(self.valid_data)
 
     def test_wrong_type_string(self):
-        """Неверный тип для строки"""
-        data = self.valid_data.copy()
-        data['brand'] = 12345
+        self.valid_data['brand'] = 12345
         with self.assertRaises(TypeError):
-            Battery(data)
+            Battery(self.valid_data)
 
     def test_wrong_type_boolean(self):
-        """Неверный тип для логического поля"""
-        data = self.valid_data.copy()
-        data['fast_charging'] = "Да"
+        self.valid_data['fast_charging'] = "Да"
         with self.assertRaises(TypeError):
-            Battery(data)
+            Battery(self.valid_data)
 
     def test_wrong_type_number_capacity(self):
-        """Неверный тип для числа"""
-        data = self.valid_data.copy()
-        data['capacity'] = "Три тысячи"
+        self.valid_data['capacity'] = "Три тысячи"
         with self.assertRaises(TypeError):
-            Battery(data)
+            Battery(self.valid_data)
 
     def test_negative_capacity(self):
-        """Отрицательная ёмкость"""
-        data = self.valid_data.copy()
-        data['capacity'] = -500
+        self.valid_data['capacity'] = -500
         with self.assertRaises(ValueError):
-            Battery(data)
+            Battery(self.valid_data)
 
     def test_wrong_type_voltage(self):
-        """Неверный тип для напряжения"""
-        data = self.valid_data.copy()
-        data['voltage'] = "двенадцать вольт"
+        self.valid_data['voltage'] = "двенадцать вольт"
         with self.assertRaises(TypeError):
-            Battery(data)
+            Battery(self.valid_data)
 
     def test_wrong_choice_enum(self):
-        """Значение, не входящее в список допустимых"""
-        data = self.valid_data.copy()
-        data['form_factor'] = 'Квадратная'
+        self.valid_data['form_factor'] = 'Квадратная'
         with self.assertRaises(ValueError):
-            Battery(data)
+            Battery(self.valid_data)
 
     def test_wrong_type_weight(self):
-        """Неверный тип для необязательного поля веса"""
-        data = self.valid_data.copy()
-        data['weight'] = "очень тяжелый"
+        self.valid_data['weight'] = "очень тяжелый"
         with self.assertRaises(TypeError):
-            Battery(data)
+            Battery(self.valid_data)
 
 if __name__ == '__main__':
     unittest.main()

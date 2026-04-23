@@ -1,16 +1,19 @@
 from django.test import TestCase
 from django.urls import reverse
 
-class CatalogRoutesTest(TestCase):
-    def test_product_list_route(self):
-        response = self.client.get(reverse('product_list'))
+class CatalogURLTests(TestCase):
+
+    def test_product_list_page_is_accessible(self):
+        url = reverse('product_list')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_product_detail_route(self):
-        # Проверяем, что страница аккумулятора с id=1 загружается успешно (код 200)
-        response = self.client.get(reverse('product_detail', args=[1]))
+    def test_about_page_is_accessible(self):
+        url = reverse('about')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_about_route(self):
-        response = self.client.get(reverse('about'))
+    def test_product_detail_page_is_accessible(self):
+        url = reverse('product_detail', args=[1])
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
