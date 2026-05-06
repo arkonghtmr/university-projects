@@ -51,7 +51,8 @@
 6.2. Настройка админки
 6.3. Представления
 6.4. Маршрутизация
-6.5. Тесты
+6.5. HTML-шаблоны
+6.6. Тесты
 ВЫВОДЫ
 
 
@@ -542,9 +543,188 @@ urlpatterns = [
 ]
 
 
-6.5. Тесты
+6.5. HTML-шаблоны
 
-Листинг 6. Файл catalog/tests.py
+Для отображения страниц используются шаблоны из папки catalog/templates/catalog/.
+Общий шаблон base.html содержит HTML-каркас страницы, меню навигации и CSS-оформление каталога.
+
+Листинг 6. Файл catalog/templates/catalog/product_list.html
+
+{% extends 'catalog/base.html' %}
+
+{% block title %}Каталог аккумуляторов{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>Каталог аккумуляторов</h1>
+        <p>Автомобильные АКБ, power bank, бытовые элементы питания и аккумуляторы для ИБП.</p>
+    </div>
+</section>
+
+<form class="filters" method="get">
+    <label>
+        Поиск
+        <input type="search" name="q" value="{{ query }}" placeholder="Название, бренд или артикул">
+    </label>
+    <label>
+        Тип
+        <select name="type">
+            <option value="">Все типы</option>
+            {% for battery_type in battery_types %}
+                <option value="{{ battery_type.slug }}"{% if selected_type == battery_type.slug %} selected{% endif %}>
+                    {{ battery_type.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>
+        Наличие
+        <select name="availability">
+            <option value="">Любое</option>
+            <option value="in_stock"{% if selected_availability == 'in_stock' %} selected{% endif %}>В наличии</option>
+            <option value="out_of_stock"{% if selected_availability == 'out_of_stock' %} selected{% endif %}>Нет в наличии</option>
+        </select>
+    </label>
+    <button class="button" type="submit">Найти</button>
+</form>
+
+{% if products %}
+    <section class="grid">
+        {% for product in products %}
+            <article class="product-card">
+                <div class="product-card__top">
+                    <span class="badge">{{ product.battery_type.name }}</span>
+                    {% if product.stock_quantity > 0 %}
+                        <span class="status">В наличии</span>
+                    {% else %}
+                        <span class="status status--empty">Нет в наличии</span>
+                    {% endif %}
+                </div>
+                <h2><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h2>
+                <p>{{ product.brand }} · {{ product.sku }}</p>
+                <dl class="specs">
+                    <div>
+                        <dt>Емкость</dt>
+                        <dd>{{ product.capacity_mah }} мАч</dd>
+                    </div>
+                    <div>
+                        <dt>Напряжение</dt>
+                        <dd>{{ product.voltage_v }} В</dd>
+                    </div>
+                    <div>
+                        <dt>Гарантия</dt>
+                        <dd>{{ product.warranty_months }} мес.</dd>
+                    </div>
+                </dl>
+                <div class="meta-row">
+                    <span class="price">{{ product.price }} ₽</span>
+                    <a class="button" href="{{ product.get_absolute_url }}">Подробнее</a>
+                </div>
+            </article>
+        {% endfor %}
+    </section>
+{% else %}
+    <section class="empty-state">
+        <p>По заданным условиям аккумуляторы не найдены.</p>
+    </section>
+{% endif %}
+{% endblock %}
+
+Листинг 7. Файл catalog/templates/catalog/product_detail.html
+
+{% extends 'catalog/base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<a class="back-link" href="{% url 'product_list' %}">Назад к каталогу</a>
+
+<article class="detail-panel">
+    <header class="page-header">
+        <div>
+            <h1>{{ product.name }}</h1>
+            <p>{{ product.brand }} · {{ product.sku }} · {{ product.battery_type.name }}</p>
+        </div>
+        <span class="price">{{ product.price }} ₽</span>
+    </header>
+
+    <section class="detail-grid">
+        <div>
+            <p>{{ product.description|default:'Описание пока не добавлено.' }}</p>
+            {% if product.stock_quantity > 0 %}
+                <p class="status">На складе: {{ product.stock_quantity }} шт.</p>
+            {% else %}
+                <p class="status status--empty">Сейчас нет в наличии</p>
+            {% endif %}
+        </div>
+
+        <dl class="specs">
+            <div>
+                <dt>Тип</dt>
+                <dd>{{ product.battery_type.name }}</dd>
+            </div>
+            <div>
+                <dt>Емкость</dt>
+                <dd>{{ product.capacity_mah }} мАч</dd>
+            </div>
+            <div>
+                <dt>Напряжение</dt>
+                <dd>{{ product.voltage_v }} В</dd>
+            </div>
+            <div>
+                <dt>Пусковой ток</dt>
+                <dd>{% if product.starting_current_a %}{{ product.starting_current_a }} А{% else %}Не указан{% endif %}</dd>
+            </div>
+            <div>
+                <dt>Вес</dt>
+                <dd>{% if product.weight_grams %}{{ product.weight_grams }} г{% else %}Не указан{% endif %}</dd>
+            </div>
+            <div>
+                <dt>Быстрая зарядка</dt>
+                <dd>{% if product.fast_charge %}Да{% else %}Нет{% endif %}</dd>
+            </div>
+            <div>
+                <dt>Большая емкость</dt>
+                <dd>{% if product.is_high_capacity %}Да{% else %}Нет{% endif %}</dd>
+            </div>
+            <div>
+                <dt>Тяжелый</dt>
+                <dd>{% if product.is_heavy %}Да{% else %}Нет{% endif %}</dd>
+            </div>
+            <div>
+                <dt>Гарантия</dt>
+                <dd>{{ product.warranty_months }} мес.</dd>
+            </div>
+        </dl>
+    </section>
+</article>
+{% endblock %}
+
+Листинг 8. Файл catalog/templates/catalog/about.html
+
+{% extends 'catalog/base.html' %}
+
+{% block title %}О магазине аккумуляторов{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>О магазине</h1>
+        <p>Каталог рассчитан на тестовое наполнение через админку Django и быстрый поиск по товарной базе.</p>
+    </div>
+</section>
+
+<section class="detail-panel">
+    <p>Магазин специализируется на аккумуляторах для автомобиля, портативной техники, бытовых устройств и резервного питания.</p>
+    <p>Для каждого товара хранится тип, артикул, бренд, емкость, напряжение, цена, складской остаток, гарантия и дополнительные характеристики.</p>
+</section>
+{% endblock %}
+
+
+6.6. Тесты
+
+Листинг 9. Файл catalog/tests.py
 
 from decimal import Decimal
 
