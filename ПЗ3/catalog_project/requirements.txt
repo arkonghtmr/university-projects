@@ -1,0 +1,5 @@
+# Django запускает сам сайт и обычные серверные тесты.
+Django==6.0.4
+
+# Selenium управляет реальным браузером в CatalogSeleniumTests.
+selenium>=4.38,<5

@@ -1,0 +1,122 @@
+[
+  {
+    "model": "catalog.batterytype",
+    "pk": 1,
+    "fields": {
+      "name": "Автомобильный",
+      "slug": "car",
+      "description": "Стартерные аккумуляторы для легковых автомобилей."
+    }
+  },
+  {
+    "model": "catalog.batterytype",
+    "pk": 2,
+    "fields": {
+      "name": "Power bank",
+      "slug": "power-bank",
+      "description": "Портативные внешние аккумуляторы для гаджетов."
+    }
+  },
+  {
+    "model": "catalog.batterytype",
+    "pk": 3,
+    "fields": {
+      "name": "AA/AAA",
+      "slug": "aa-aaa",
+      "description": "Бытовые аккумуляторные элементы питания."
+    }
+  },
+  {
+    "model": "catalog.batterytype",
+    "pk": 4,
+    "fields": {
+      "name": "ИБП",
+      "slug": "ups",
+      "description": "Аккумуляторы для источников бесперебойного питания."
+    }
+  },
+  {
+    "model": "catalog.battery",
+    "pk": 1,
+    "fields": {
+      "sku": "AKB-VARTA-D24",
+      "name": "VARTA Blue Dynamic D24",
+      "brand": "VARTA",
+      "battery_type": 1,
+      "capacity_mah": 60000,
+      "voltage_v": "12.00",
+      "starting_current_a": 540,
+      "weight_grams": 14500,
+      "price": "6500.00",
+      "stock_quantity": 4,
+      "warranty_months": 24,
+      "fast_charge": false,
+      "description": "Автомобильный аккумулятор емкостью 60 Ач с пусковым током 540 А.",
+      "created_at": "2026-05-05T07:00:00Z",
+      "updated_at": "2026-05-05T07:00:00Z"
+    }
+  },
+  {
+    "model": "catalog.battery",
+    "pk": 2,
+    "fields": {
+      "sku": "AKB-XIAOMI-20000",
+      "name": "Xiaomi Redmi Power Bank 20000",
+      "brand": "Xiaomi",
+      "battery_type": 2,
+      "capacity_mah": 20000,
+      "voltage_v": "3.70",
+      "starting_current_a": null,
+      "weight_grams": 430,
+      "price": "2500.00",
+      "stock_quantity": 12,
+      "warranty_months": 12,
+      "fast_charge": true,
+      "description": "Портативный аккумулятор на 20000 мАч с поддержкой быстрой зарядки.",
+      "created_at": "2026-05-05T07:05:00Z",
+      "updated_at": "2026-05-05T07:05:00Z"
+    }
+  },
+  {
+    "model": "catalog.battery",
+    "pk": 3,
+    "fields": {
+      "sku": "AKB-GP-AA-2500",
+      "name": "GP ReCyko AA 2500",
+      "brand": "GP",
+      "battery_type": 3,
+      "capacity_mah": 2500,
+      "voltage_v": "1.20",
+      "starting_current_a": null,
+      "weight_grams": 120,
+      "price": "1200.00",
+      "stock_quantity": 0,
+      "warranty_months": 6,
+      "fast_charge": false,
+      "description": "Комплект из четырех Ni-MH аккумуляторов AA емкостью 2500 мАч.",
+      "created_at": "2026-05-05T07:10:00Z",
+      "updated_at": "2026-05-05T07:10:00Z"
+    }
+  },
+  {
+    "model": "catalog.battery",
+    "pk": 4,
+    "fields": {
+      "sku": "AKB-CSB-HRL1234",
+      "name": "CSB HRL 1234W",
+      "brand": "CSB",
+      "battery_type": 4,
+      "capacity_mah": 9000,
+      "voltage_v": "12.00",
+      "starting_current_a": null,
+      "weight_grams": 2600,
+      "price": "4300.00",
+      "stock_quantity": 3,
+      "warranty_months": 18,
+      "fast_charge": false,
+      "description": "Герметичный свинцово-кислотный аккумулятор для источников бесперебойного питания.",
+      "created_at": "2026-05-05T07:15:00Z",
+      "updated_at": "2026-05-05T07:15:00Z"
+    }
+  }
+]
