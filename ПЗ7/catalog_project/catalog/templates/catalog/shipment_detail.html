@@ -1,0 +1,94 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}{{ shipment.title }}{% endblock %}
+
+{% block content %}
+<a class="back-link" href="{% url 'shipment_list' %}">Назад к партиям</a>
+
+<section class="page-header">
+    <div>
+        <h1>{{ shipment.title }}</h1>
+        <p>Менеджер: {{ shipment.owner.username }}</p>
+    </div>
+</section>
+
+<section class="tool-grid">
+    <form class="form-panel" method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="form-grid">
+            {% for field in form %}
+                <label>
+                    {{ field.label }}
+                    {{ field }}
+                    {{ field.errors }}
+                </label>
+            {% endfor %}
+        </div>
+        <button class="button" type="submit">Обновить скидку</button>
+    </form>
+
+    <form class="form-panel" method="post" action="{% url 'shipment_add_item' shipment.pk %}">
+        {% csrf_token %}
+        {{ item_form.non_field_errors }}
+        <div class="form-grid">
+            {% for field in item_form %}
+                <label>
+                    {{ field.label }}
+                    {{ field }}
+                    {{ field.errors }}
+                </label>
+            {% endfor %}
+        </div>
+        <button class="button" type="submit">Добавить позицию</button>
+    </form>
+</section>
+
+{% if shipment.items.all %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Товар</th>
+                <th>Количество</th>
+                <th>Цена</th>
+                <th>Сумма</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in shipment.items.all %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.unit_price }} ₽</td>
+                    <td>{{ item.total_price }} ₽</td>
+                    <td>
+                        <form method="post" action="{% url 'shipment_delete_item' shipment.pk item.pk %}">
+                            {% csrf_token %}
+                            <button class="button button--danger" type="submit">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3">Сумма до скидки</th>
+                <th colspan="2">{{ shipment.subtotal }} ₽</th>
+            </tr>
+            <tr>
+                <th colspan="3">Дополнительная скидка</th>
+                <th colspan="2">{{ shipment.discount_amount }} ₽</th>
+            </tr>
+            <tr>
+                <th colspan="3">Итого</th>
+                <th colspan="2">{{ shipment.total }} ₽</th>
+            </tr>
+        </tfoot>
+    </table>
+{% else %}
+    <section class="empty-state">
+        <p>В партии пока нет товаров.</p>
+    </section>
+{% endif %}
+{% endblock %}

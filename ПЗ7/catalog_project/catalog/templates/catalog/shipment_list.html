@@ -1,0 +1,45 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}Партии на отправку{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>Партии на отправку</h1>
+        <p>Менеджер видит и изменяет только свои партии. Администратор видит все.</p>
+    </div>
+    <form method="post" action="{% url 'shipment_create' %}">
+        {% csrf_token %}
+        <button class="button" type="submit">Новая партия</button>
+    </form>
+</section>
+
+{% if shipments %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Менеджер</th>
+                <th>Позиций</th>
+                <th>Итого</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for shipment in shipments %}
+                <tr>
+                    <td>{{ shipment.title }}</td>
+                    <td>{{ shipment.owner.username }}</td>
+                    <td>{{ shipment.items.count }}</td>
+                    <td>{{ shipment.total }} ₽</td>
+                    <td><a href="{% url 'shipment_detail' shipment.pk %}">Открыть</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <section class="empty-state">
+        <p>Партии пока не сформированы.</p>
+    </section>
+{% endif %}
+{% endblock %}

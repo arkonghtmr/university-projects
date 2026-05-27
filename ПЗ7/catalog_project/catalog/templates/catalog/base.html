@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Каталог аккумуляторов{% endblock %}</title>
+    <style>
+        :root {
+            --bg: #f5f7fb;
+            --panel: #ffffff;
+            --text: #1f2937;
+            --muted: #667085;
+            --line: #d7dee8;
+            --accent: #0f766e;
+            --accent-dark: #115e59;
+            --warning: #b45309;
+            --danger: #b42318;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: var(--text);
+            background: var(--bg);
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+        }
+
+        a {
+            color: var(--accent-dark);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .topbar {
+            background: #111827;
+            color: #ffffff;
+        }
+
+        .topbar__inner,
+        .page {
+            width: min(1120px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .topbar__inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            min-height: 64px;
+        }
+
+        .brand {
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            color: #e5e7eb;
+            font-weight: 600;
+        }
+
+        .nav__user {
+            color: #9ca3af;
+            font-weight: 700;
+        }
+
+        .nav form {
+            margin: 0;
+        }
+
+        .nav button {
+            padding: 0;
+            color: #e5e7eb;
+            background: transparent;
+            border: 0;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .page {
+            padding: 28px 0 44px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 20px;
+            margin-bottom: 22px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 34px;
+            line-height: 1.15;
+        }
+
+        .page-header p {
+            margin: 8px 0 0;
+            color: var(--muted);
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: minmax(220px, 1fr) 200px 170px 180px auto;
+            gap: 12px;
+            align-items: end;
+            padding: 18px;
+            margin-bottom: 22px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+        }
+
+        label {
+            display: grid;
+            gap: 6px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        input,
+        select {
+            width: 100%;
+            min-height: 42px;
+            padding: 9px 11px;
+            color: var(--text);
+            background: #ffffff;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+            min-height: auto;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            padding: 9px 16px;
+            color: #ffffff;
+            background: var(--accent);
+            border: 0;
+            border-radius: 6px;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: var(--accent-dark);
+            text-decoration: none;
+        }
+
+        .button--muted {
+            color: var(--text);
+            background: #e5e7eb;
+        }
+
+        .button--muted:hover {
+            background: #d1d5db;
+        }
+
+        .button--danger {
+            background: var(--danger);
+        }
+
+        .button--danger:hover {
+            background: #7f1d1d;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .product-card,
+        .detail-panel,
+        .empty-state {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+        }
+
+        .product-card {
+            display: grid;
+            gap: 12px;
+            padding: 18px;
+        }
+
+        .product-card__top,
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            padding: 4px 10px;
+            color: var(--accent-dark);
+            background: #dff6f1;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .status {
+            color: var(--accent-dark);
+            font-weight: 700;
+        }
+
+        .status--empty {
+            color: var(--danger);
+        }
+
+        .product-card h2 {
+            margin: 0;
+            font-size: 20px;
+            line-height: 1.25;
+        }
+
+        .product-card p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .specs {
+            display: grid;
+            gap: 8px;
+            margin: 0;
+        }
+
+        .specs div {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #edf1f6;
+        }
+
+        .specs dt {
+            color: var(--muted);
+        }
+
+        .specs dd {
+            margin: 0;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .price {
+            color: #101828;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .detail-panel {
+            display: grid;
+            gap: 22px;
+            padding: 24px;
+        }
+
+        .form-panel {
+            display: grid;
+            gap: 16px;
+            max-width: 840px;
+            padding: 24px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .form-grid .wide {
+            grid-column: 1 / -1;
+        }
+
+        .errorlist {
+            margin: 0;
+            padding-left: 18px;
+            color: var(--danger);
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .data-table th {
+            color: var(--muted);
+            background: #f8fafc;
+            font-size: 13px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 28px;
+        }
+
+        .empty-state {
+            padding: 28px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-flex;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 780px) {
+            .topbar__inner,
+            .page-header,
+            .detail-grid {
+                display: grid;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar__inner">
+            <a class="brand" href="{% url 'product_list' %}">Battery Store</a>
+            <nav class="nav">
+                <a href="{% url 'product_list' %}">Каталог</a>
+                {% if can_manage_products %}
+                    <a href="{% url 'product_create' %}">Добавить товар</a>
+                {% endif %}
+                {% if can_manage_shipments %}
+                    <a href="{% url 'shipment_list' %}">Партии</a>
+                {% endif %}
+                <a href="{% url 'about' %}">О магазине</a>
+                <a href="/admin/">Админка</a>
+                {% if user.is_authenticated %}
+                    <span class="nav__user">{{ user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Выйти</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">Войти</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+    <main class="page">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

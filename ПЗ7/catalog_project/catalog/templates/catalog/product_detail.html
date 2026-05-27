@@ -1,0 +1,93 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<a class="back-link" href="{% url 'product_list' %}">Назад к каталогу</a>
+
+<article class="detail-panel">
+    <header class="page-header">
+        <div>
+            <h1>{{ product.name }}</h1>
+            <p>{{ product.brand }} · {{ product.sku }} · {{ product.battery_type.name }}</p>
+        </div>
+        <div class="actions">
+            <span class="price">{{ product.price }} ₽</span>
+            {% if can_manage_products %}
+                <a class="button button--muted" href="{% url 'product_update' product.pk %}">Редактировать</a>
+                <a class="button button--danger" href="{% url 'product_delete' product.pk %}">Удалить</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <section class="detail-grid">
+        <div>
+            <p>{{ product.description|default:'Описание пока не добавлено.' }}</p>
+            {% if product.stock_quantity > 0 %}
+                <p class="status">На складе: {{ product.stock_quantity }} шт.</p>
+            {% else %}
+                <p class="status status--empty">Сейчас нет в наличии</p>
+            {% endif %}
+        </div>
+
+        <dl class="specs">
+            <div>
+                <dt>Тип</dt>
+                <dd>{{ product.battery_type.name }}</dd>
+            </div>
+            <div>
+                <dt>Емкость</dt>
+                <dd>{{ product.capacity_mah }} мАч</dd>
+            </div>
+            <div>
+                <dt>Напряжение</dt>
+                <dd>{{ product.voltage_v }} В</dd>
+            </div>
+            <div>
+                <dt>Пусковой ток</dt>
+                <dd>{% if product.starting_current_a %}{{ product.starting_current_a }} А{% else %}Не указан{% endif %}</dd>
+            </div>
+            <div>
+                <dt>Вес</dt>
+                <dd>{% if product.weight_grams %}{{ product.weight_grams }} г{% else %}Не указан{% endif %}</dd>
+            </div>
+            <div>
+                <dt>Быстрая зарядка</dt>
+                <dd>{% if product.fast_charge %}Да{% else %}Нет{% endif %}</dd>
+            </div>
+            <div>
+                <dt>Мелкий опт</dt>
+                <dd>
+                    {% if product.small_wholesale_price %}
+                        от {{ product.small_wholesale_min_quantity }} шт. по {{ product.small_wholesale_price }} ₽
+                    {% else %}
+                        Не указан
+                    {% endif %}
+                </dd>
+            </div>
+            <div>
+                <dt>Крупный опт</dt>
+                <dd>
+                    {% if product.large_wholesale_price %}
+                        от {{ product.large_wholesale_min_quantity }} шт. по {{ product.large_wholesale_price }} ₽
+                    {% else %}
+                        Не указан
+                    {% endif %}
+                </dd>
+            </div>
+            <div>
+                <dt>Большая емкость</dt>
+                <dd>{% if product.is_high_capacity %}Да{% else %}Нет{% endif %}</dd>
+            </div>
+            <div>
+                <dt>Тяжелый</dt>
+                <dd>{% if product.is_heavy %}Да{% else %}Нет{% endif %}</dd>
+            </div>
+            <div>
+                <dt>Гарантия</dt>
+                <dd>{{ product.warranty_months }} мес.</dd>
+            </div>
+        </dl>
+    </section>
+</article>
+{% endblock %}

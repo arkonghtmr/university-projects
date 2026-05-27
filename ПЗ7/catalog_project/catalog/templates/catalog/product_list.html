@@ -1,0 +1,99 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}Каталог аккумуляторов{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>Каталог аккумуляторов</h1>
+        <p>Автомобильные АКБ, power bank, бытовые элементы питания и аккумуляторы для ИБП.</p>
+    </div>
+    {% if can_manage_products %}
+        <a class="button" href="{% url 'product_create' %}">Добавить товар</a>
+    {% endif %}
+</section>
+
+<form class="filters" method="get">
+    <label>
+        Поиск
+        <input type="search" name="q" value="{{ query }}" placeholder="Название, бренд или артикул">
+    </label>
+    <label>
+        Тип
+        <select name="type">
+            <option value="">Все типы</option>
+            {% for battery_type in battery_types %}
+                <option value="{{ battery_type.slug }}"{% if selected_type == battery_type.slug %} selected{% endif %}>
+                    {{ battery_type.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>
+        Наличие
+        <select name="availability">
+            <option value="">Любое</option>
+            <option value="in_stock"{% if selected_availability == 'in_stock' %} selected{% endif %}>В наличии</option>
+            <option value="out_of_stock"{% if selected_availability == 'out_of_stock' %} selected{% endif %}>Нет в наличии</option>
+        </select>
+    </label>
+    <label>
+        Сортировка
+        <select name="sort">
+            {% for sort_value, sort_option in sort_options.items %}
+                <option value="{{ sort_value }}"{% if selected_sort == sort_value %} selected{% endif %}>
+                    {{ sort_option.label }}
+                </option>
+            {% endfor %}
+        </select>
+    </label>
+    <button class="button" type="submit">Найти</button>
+</form>
+
+{% if products %}
+    <section class="grid">
+        {% for product in products %}
+            <article class="product-card">
+                <div class="product-card__top">
+                    <span class="badge">{{ product.battery_type.name }}</span>
+                    {% if product.stock_quantity > 0 %}
+                        <span class="status">В наличии</span>
+                    {% else %}
+                        <span class="status status--empty">Нет в наличии</span>
+                    {% endif %}
+                </div>
+                <h2><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h2>
+                <p>{{ product.brand }} · {{ product.sku }}</p>
+                <dl class="specs">
+                    <div>
+                        <dt>Емкость</dt>
+                        <dd>{{ product.capacity_mah }} мАч</dd>
+                    </div>
+                    <div>
+                        <dt>Напряжение</dt>
+                        <dd>{{ product.voltage_v }} В</dd>
+                    </div>
+                    <div>
+                        <dt>Гарантия</dt>
+                        <dd>{{ product.warranty_months }} мес.</dd>
+                    </div>
+                    {% if product.small_wholesale_price %}
+                        <div>
+                            <dt>Мелкий опт от {{ product.small_wholesale_min_quantity }} шт.</dt>
+                            <dd>{{ product.small_wholesale_price }} ₽</dd>
+                        </div>
+                    {% endif %}
+                </dl>
+                <div class="meta-row">
+                    <span class="price">{{ product.price }} ₽</span>
+                    <a class="button" href="{{ product.get_absolute_url }}">Подробнее</a>
+                </div>
+            </article>
+        {% endfor %}
+    </section>
+{% else %}
+    <section class="empty-state">
+        <p>По заданным условиям аккумуляторы не найдены.</p>
+    </section>
+{% endif %}
+{% endblock %}

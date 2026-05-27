@@ -1,0 +1,36 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<a class="back-link" href="{% url 'product_list' %}">Назад к каталогу</a>
+
+<section class="page-header">
+    <div>
+        <h1>{{ title }}</h1>
+        <p>Данные товара доступны товароведу и администратору.</p>
+    </div>
+</section>
+
+<form class="form-panel" method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="form-grid">
+        {% for field in form %}
+            <label{% if field.name == 'description' or field.name == 'fast_charge' %} class="wide"{% endif %}>
+                {{ field.label }}
+                {{ field }}
+                {{ field.errors }}
+            </label>
+        {% endfor %}
+    </div>
+    <div class="actions">
+        <button class="button" type="submit">{{ submit_label }}</button>
+        {% if product %}
+            <a class="button button--muted" href="{{ product.get_absolute_url }}">Отмена</a>
+        {% else %}
+            <a class="button button--muted" href="{% url 'product_list' %}">Отмена</a>
+        {% endif %}
+    </div>
+</form>
+{% endblock %}

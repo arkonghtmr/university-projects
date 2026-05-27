@@ -1,0 +1,29 @@
+services:
+  web:
+    build: .
+    image: pz7-catalog-web
+    restart: unless-stopped
+    environment:
+      DJANGO_DEBUG: "False"
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,web"
+      DJANGO_DB_PATH: "/data/db.sqlite3"
+      DJANGO_STATIC_ROOT: "/static"
+      DJANGO_SECRET_KEY: "pz7-local-docker-secret-key"
+    volumes:
+      - catalog_db:/data
+      - static_files:/static
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - web
+    ports:
+      - "8087:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - static_files:/static:ro
+
+volumes:
+  catalog_db:
+  static_files:
