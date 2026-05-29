@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Практическая работа 4 - Wireframe главной страницы</title>
+    <meta
+      name="description"
+      content="Wireframe главной страницы лендинга PixelArt для практической работы 4."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="#top" aria-label="PixelArt">
+          <span class="brand-mark">PA</span>
+          <span>
+            <span class="brand-name">PixelArt</span>
+            <span class="brand-subtitle">Школа моушн-дизайна</span>
+          </span>
+        </a>
+
+        <nav class="desktop-nav" aria-label="Основная навигация">
+          <button type="button" data-scroll="wireframe">Макет</button>
+          <button type="button" data-scroll="popups">Попапы</button>
+          <button type="button" data-scroll="requirements">Параметры</button>
+        </nav>
+
+        <div class="header-actions">
+          <button class="button button-ghost" type="button" data-open-modal="account">
+            Личный кабинет
+          </button>
+          <button class="button button-dark" type="button" data-open-modal="signup">
+            Записаться
+          </button>
+        </div>
+
+        <button class="menu-button" type="button" aria-label="Открыть меню" data-menu-button>
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <nav class="mobile-nav" aria-label="Мобильная навигация" data-mobile-menu>
+        <button type="button" data-scroll="wireframe">Макет</button>
+        <button type="button" data-scroll="popups">Попапы</button>
+        <button type="button" data-scroll="requirements">Параметры</button>
+        <button class="button button-dark" type="button" data-open-modal="signup">Записаться</button>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="intro-section">
+        <div class="container intro-grid">
+          <div>
+            <p class="kicker">Практическая работа 4</p>
+            <h1>Wireframe главной страницы лендинга</h1>
+            <p class="lead">
+              Низкодетальный серый макет первого экрана desktop-версии сайта онлайн-курса
+              PixelArt. В макете показаны header, навигация, целевые кнопки, личный кабинет,
+              hero-блок и всплывающие окна.
+            </p>
+          </div>
+
+          <aside class="brief-card" aria-label="Параметры работы">
+            <h2>Параметры</h2>
+            <dl class="brief-list">
+              <div>
+                <dt>Фрейм</dt>
+                <dd>1920 px, первый экран 720 px</dd>
+              </div>
+              <div>
+                <dt>Сетка</dt>
+                <dd>12 колонок, контент 1300 px</dd>
+              </div>
+              <div>
+                <dt>Gutter</dt>
+                <dd>24 px</dd>
+              </div>
+              <div>
+                <dt>Цвет</dt>
+                <dd>Только оттенки серого</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+      </section>
+
+      <section class="canvas-section" id="wireframe">
+        <div class="container">
+          <div class="section-toolbar">
+            <div>
+              <p class="kicker">Desktop</p>
+              <h2>Главная страница</h2>
+            </div>
+            <button class="button button-ghost" type="button" data-grid-toggle="desktop-frame">
+              Скрыть сетку
+            </button>
+          </div>
+
+          <article class="desktop-frame compact-frame" id="desktop-frame" aria-label="Wireframe первого экрана">
+            <div class="grid-overlay grid-12" aria-hidden="true"></div>
+
+            <header class="wf-header">
+              <div class="wf-logo">
+                <span class="wf-logo-mark"></span>
+                <strong>PixelArt</strong>
+              </div>
+              <nav class="wf-nav" aria-label="Разделы лендинга">
+                <span>Для кого</span>
+                <span>Программа</span>
+                <span>Работы</span>
+                <span>Преподаватели</span>
+                <span>Тарифы</span>
+                <span>FAQ</span>
+              </nav>
+              <div class="wf-header-controls">
+                <span class="wf-mini-button">Кабинет</span>
+                <span class="wf-mini-button is-filled">Записаться</span>
+              </div>
+            </header>
+
+            <section class="wf-hero">
+              <div class="wf-copy">
+                <span class="wf-pill">Старт потока 15 июня</span>
+                <h3>Моушн-дизайн с нуля</h3>
+                <p>
+                  Освойте 2D и 3D анимацию за 2 месяца. Соберите портфолио из 5 работ и
+                  начните брать творческие проекты.
+                </p>
+                <div class="wf-actions">
+                  <span class="wf-button is-filled">Записаться на курс</span>
+                  <span class="wf-button">Бесплатная консультация</span>
+                </div>
+                <div class="wf-stats">
+                  <span><strong>2 месяца</strong>длительность</span>
+                  <span><strong>5 проектов</strong>в портфолио</span>
+                  <span><strong>100%</strong>практики</span>
+                </div>
+              </div>
+
+              <div class="wf-visual" aria-label="Геометрический плейсхолдер шоурила">
+                <span class="shape shape-rect"></span>
+                <span class="shape shape-circle"></span>
+                <span class="shape shape-wide"></span>
+                <span class="shape shape-small"></span>
+                <div class="wf-player">
+                  <span></span>
+                </div>
+                <div class="wf-caption">Шоурил студентов</div>
+              </div>
+            </section>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="popups">
+        <div class="container">
+          <div class="section-heading">
+            <p class="kicker">Всплывающие окна</p>
+            <h2>Макеты состояний первого экрана</h2>
+          </div>
+
+          <div class="popup-grid">
+            <article class="popup-wire">
+              <div class="popup-topline">
+                <strong>Запись на курс</strong>
+                <span></span>
+              </div>
+              <p>Оставьте контакты, и куратор расскажет о программе обучения.</p>
+              <div class="input-line">Имя</div>
+              <div class="input-line">Телефон</div>
+              <div class="input-line">Email</div>
+              <span class="wf-button is-filled">Отправить заявку</span>
+            </article>
+
+            <article class="popup-wire">
+              <div class="popup-topline">
+                <strong>Личный кабинет</strong>
+                <span></span>
+              </div>
+              <p>Вход для студентов курса PixelArt.</p>
+              <div class="input-line">Email</div>
+              <div class="input-line">Пароль</div>
+              <span class="wf-button is-filled">Войти</span>
+              <span class="text-link">Восстановить пароль</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-muted" id="requirements">
+        <div class="container requirement-grid">
+          <article>
+            <span class="number-badge">1</span>
+            <h3>Header 112 px</h3>
+            <p>В верхней части показаны логотип, все разделы архитектуры, кнопка записи и вход.</p>
+          </article>
+          <article>
+            <span class="number-badge">2</span>
+            <h3>Контент по сетке</h3>
+            <p>Заголовок, текст, кнопки, статистика и главный визуал не выходят за 12 колонок.</p>
+          </article>
+          <article>
+            <span class="number-badge">3</span>
+            <h3>Графика фигурами</h3>
+            <p>Будущие изображения заменены прямоугольниками, кругами и линиями в серой палитре.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <div class="modal" data-modal="signup" hidden>
+      <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Запись на курс">
+        <button class="modal-close" type="button" data-close-modal aria-label="Закрыть">×</button>
+        <h2>Запись на курс</h2>
+        <p>Куратор свяжется с вами и поможет выбрать тариф.</p>
+        <label>Имя<input type="text" placeholder="Анна" /></label>
+        <label>Телефон<input type="tel" placeholder="+7 900 000-00-00" /></label>
+        <button class="button button-dark" type="button">Отправить заявку</button>
+      </div>
+    </div>
+
+    <div class="modal" data-modal="account" hidden>
+      <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Личный кабинет">
+        <button class="modal-close" type="button" data-close-modal aria-label="Закрыть">×</button>
+        <h2>Личный кабинет</h2>
+        <p>Вход в учебную платформу PixelArt.</p>
+        <label>Email<input type="email" placeholder="student@pixelart.ru" /></label>
+        <label>Пароль<input type="password" placeholder="••••••••" /></label>
+        <button class="button button-dark" type="button">Войти</button>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>Практическая работа 4</span>
+        <span>PixelArt - wireframe главной страницы</span>
+      </div>
+    </footer>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>

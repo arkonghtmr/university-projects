@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Практическая работа 6 - Wireframe адаптива</title>
+    <meta
+      name="description"
+      content="Мобильный wireframe лендинга PixelArt для iPhone 14 с 8-колоночной сеткой."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="#top" aria-label="PixelArt">
+          <span class="brand-mark">PA</span>
+          <span>
+            <span class="brand-name">PixelArt</span>
+            <span class="brand-subtitle">Школа моушн-дизайна</span>
+          </span>
+        </a>
+
+        <nav class="desktop-nav" aria-label="Основная навигация">
+          <button type="button" data-scroll="mobile-wireframe">Макет</button>
+          <button type="button" data-scroll="mobile-popups">Попапы</button>
+          <button type="button" data-scroll="adaptive-rules">Параметры</button>
+        </nav>
+
+        <div class="header-actions">
+          <button class="button button-ghost" type="button" data-open-modal="account">
+            Личный кабинет
+          </button>
+          <button class="button button-dark" type="button" data-open-modal="signup">
+            Записаться
+          </button>
+        </div>
+
+        <button class="menu-button" type="button" aria-label="Открыть меню" data-menu-button>
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <nav class="mobile-nav" aria-label="Мобильная навигация" data-mobile-menu>
+        <button type="button" data-scroll="mobile-wireframe">Макет</button>
+        <button type="button" data-scroll="mobile-popups">Попапы</button>
+        <button type="button" data-scroll="adaptive-rules">Параметры</button>
+        <button class="button button-dark" type="button" data-open-modal="signup">Записаться</button>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="intro-section">
+        <div class="container intro-grid">
+          <div>
+            <p class="kicker">Практическая работа 6</p>
+            <h1>Wireframe для адаптива под мобильную версию</h1>
+            <p class="lead">
+              Мобильный макет лендинга PixelArt на базе desktop-структуры: контент сохранен,
+              блоки идут в той же иерархии, интерактивные элементы имеют удобную область нажатия.
+            </p>
+          </div>
+
+          <aside class="brief-card" aria-label="Параметры мобильного фрейма">
+            <h2>iPhone 14</h2>
+            <dl class="brief-list">
+              <div>
+                <dt>Фрейм</dt>
+                <dd>390 px по ширине</dd>
+              </div>
+              <div>
+                <dt>Сетка</dt>
+                <dd>8 колонок</dd>
+              </div>
+              <div>
+                <dt>Margin</dt>
+                <dd>16 px</dd>
+              </div>
+              <div>
+                <dt>Gutter</dt>
+                <dd>10 px</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+      </section>
+
+      <section class="canvas-section" id="mobile-wireframe">
+        <div class="container mobile-layout">
+          <div class="section-toolbar mobile-toolbar">
+            <div>
+              <p class="kicker">Mobile</p>
+              <h2>Адаптивный wireframe</h2>
+            </div>
+            <button class="button button-ghost" type="button" data-grid-toggle="phone-frame">
+              Скрыть сетку
+            </button>
+          </div>
+
+          <article class="phone-frame" id="phone-frame" aria-label="Мобильный wireframe iPhone 14">
+            <div class="phone-speaker" aria-hidden="true"></div>
+            <div class="phone-screen">
+              <div class="grid-overlay grid-8" aria-hidden="true"></div>
+
+              <header class="mobile-wf-header">
+                <div class="wf-logo compact-logo">
+                  <span class="wf-logo-mark"></span>
+                  <strong>PixelArt</strong>
+                </div>
+                <button class="wire-menu-button" type="button" aria-label="Открыть меню" data-wire-menu>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </button>
+              </header>
+
+              <nav class="wire-menu-panel" data-wire-menu-panel aria-label="Меню внутри мобильного макета">
+                <span>Для кого</span>
+                <span>Программа</span>
+                <span>Работы</span>
+                <span>Тарифы</span>
+                <span>FAQ</span>
+              </nav>
+
+              <section class="mobile-wire-block hero-mobile">
+                <span class="wf-pill">Старт 15 июня</span>
+                <h3>Моушн-дизайн с нуля</h3>
+                <p>Освойте 2D и 3D анимацию за 2 месяца и соберите портфолио из 5 работ.</p>
+                <span class="wf-button is-filled">Записаться на курс</span>
+                <span class="wf-button">Консультация</span>
+                <div class="mobile-visual">
+                  <span class="shape shape-rect"></span>
+                  <span class="shape shape-circle"></span>
+                  <span class="shape shape-wide"></span>
+                </div>
+              </section>
+
+              <section class="mobile-wire-block">
+                <h3>Для кого</h3>
+                <article class="mobile-card">
+                  <span class="icon-placeholder"></span>
+                  <div>
+                    <h4>Новички без опыта</h4>
+                    <p>Старт в творческой профессии с нуля.</p>
+                  </div>
+                </article>
+                <article class="mobile-card">
+                  <span class="icon-placeholder"></span>
+                  <div>
+                    <h4>Смена профессии</h4>
+                    <p>Переход в digital и первые заказы.</p>
+                  </div>
+                </article>
+                <article class="mobile-card">
+                  <span class="icon-placeholder"></span>
+                  <div>
+                    <h4>Дизайнеры</h4>
+                    <p>Добавление анимации в портфолио.</p>
+                  </div>
+                </article>
+              </section>
+
+              <section class="mobile-wire-block muted-wire">
+                <h3>Что вы получите</h3>
+                <div class="mobile-stack">
+                  <span>Портфолио из 5 работ</span>
+                  <span>After Effects и Cinema 4D</span>
+                  <span>Сертификат</span>
+                  <span>Помощь с заказами</span>
+                </div>
+              </section>
+
+              <section class="mobile-wire-block">
+                <h3>Программа курса</h3>
+                <div class="mobile-timeline">
+                  <span>1-2</span>
+                  <p>Основы анимации и After Effects</p>
+                  <span>3-4</span>
+                  <p>Маски, текст и продвинутые техники</p>
+                  <span>5-6</span>
+                  <p>Основы 3D в Cinema 4D</p>
+                  <span>7-8</span>
+                  <p>Финальные проекты и шоурил</p>
+                </div>
+              </section>
+
+              <section class="mobile-wire-block muted-wire">
+                <h3>Работы выпускников</h3>
+                <div class="mobile-works">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </section>
+
+              <section class="mobile-wire-block">
+                <h3>Тарифы</h3>
+                <article class="mobile-price">
+                  <h4>Стандарт</h4>
+                  <strong>29 900 ₽</strong>
+                  <span class="wf-button">Выбрать</span>
+                </article>
+                <article class="mobile-price accent-wire">
+                  <h4>С наставником</h4>
+                  <strong>49 900 ₽</strong>
+                  <span class="wf-button is-filled">Выбрать</span>
+                </article>
+              </section>
+
+              <section class="mobile-wire-block">
+                <h3>FAQ</h3>
+                <div class="mobile-stack">
+                  <span>Нужно ли уметь рисовать?</span>
+                  <span>Какой компьютер нужен?</span>
+                  <span>Сколько времени уделять учебе?</span>
+                </div>
+              </section>
+
+              <footer class="mobile-wire-footer">
+                <strong>PixelArt</strong>
+                <span>info@pixelart.ru</span>
+                <span>8 (800) 123-45-67</span>
+              </footer>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="mobile-popups">
+        <div class="container">
+          <div class="section-heading">
+            <p class="kicker">Mobile states</p>
+            <h2>Попапы мобильной версии</h2>
+          </div>
+
+          <div class="mobile-popup-grid">
+            <article class="mobile-popup">
+              <div class="popup-topline">
+                <strong>Запись</strong>
+                <span></span>
+              </div>
+              <div class="input-line">Имя</div>
+              <div class="input-line">Телефон</div>
+              <div class="input-line">Email</div>
+              <span class="wf-button is-filled">Отправить</span>
+            </article>
+
+            <article class="mobile-popup">
+              <div class="popup-topline">
+                <strong>Кабинет</strong>
+                <span></span>
+              </div>
+              <div class="input-line">Email</div>
+              <div class="input-line">Пароль</div>
+              <span class="wf-button is-filled">Войти</span>
+              <span class="text-link">Восстановить пароль</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-muted" id="adaptive-rules">
+        <div class="container requirement-grid">
+          <article>
+            <span class="number-badge">1</span>
+            <h3>Контент сохранен</h3>
+            <p>Мобильная версия повторяет desktop-блоки без удаления информации.</p>
+          </article>
+          <article>
+            <span class="number-badge">2</span>
+            <h3>Одна колонка</h3>
+            <p>Карточки, тарифы и галерея перестроены вертикально для узкого экрана.</p>
+          </article>
+          <article>
+            <span class="number-badge">3</span>
+            <h3>44 px</h3>
+            <p>Кнопки, меню и поля сделаны не меньше рекомендуемой области нажатия.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <div class="modal" data-modal="signup" hidden>
+      <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Запись на курс">
+        <button class="modal-close" type="button" data-close-modal aria-label="Закрыть">×</button>
+        <h2>Запись на курс</h2>
+        <p>Мобильное состояние формы заявки.</p>
+        <label>Имя<input type="text" placeholder="Анна" /></label>
+        <label>Телефон<input type="tel" placeholder="+7 900 000-00-00" /></label>
+        <button class="button button-dark" type="button">Отправить заявку</button>
+      </div>
+    </div>
+
+    <div class="modal" data-modal="account" hidden>
+      <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Личный кабинет">
+        <button class="modal-close" type="button" data-close-modal aria-label="Закрыть">×</button>
+        <h2>Личный кабинет</h2>
+        <p>Вход в учебную платформу PixelArt.</p>
+        <label>Email<input type="email" placeholder="student@pixelart.ru" /></label>
+        <label>Пароль<input type="password" placeholder="••••••••" /></label>
+        <button class="button button-dark" type="button">Войти</button>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>Практическая работа 6</span>
+        <span>PixelArt - адаптивный wireframe</span>
+      </div>
+    </footer>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
