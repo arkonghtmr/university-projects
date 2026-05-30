@@ -117,4 +117,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+LOGIN_REDIRECT_URL = 'product_list'
+LOGOUT_REDIRECT_URL = 'product_list'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

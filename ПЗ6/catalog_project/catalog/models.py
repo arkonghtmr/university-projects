@@ -133,20 +133,20 @@ class Battery(models.Model):
         verbose_name = 'Аккумулятор'
         verbose_name_plural = 'Аккумуляторы'
         constraints = [
-            models.CheckConstraint(check=Q(price__gt=0), name='battery_price_positive'),
-            models.CheckConstraint(check=Q(capacity_mah__gt=0), name='battery_capacity_positive'),
-            models.CheckConstraint(check=Q(voltage_v__gt=0), name='battery_voltage_positive'),
-            models.CheckConstraint(check=Q(stock_quantity__gte=0), name='battery_stock_non_negative'),
+            models.CheckConstraint(condition=Q(price__gt=0), name='battery_price_positive'),
+            models.CheckConstraint(condition=Q(capacity_mah__gt=0), name='battery_capacity_positive'),
+            models.CheckConstraint(condition=Q(voltage_v__gt=0), name='battery_voltage_positive'),
+            models.CheckConstraint(condition=Q(stock_quantity__gte=0), name='battery_stock_non_negative'),
             models.CheckConstraint(
-                check=Q(weight_grams__isnull=True) | Q(weight_grams__gt=0),
+                condition=Q(weight_grams__isnull=True) | Q(weight_grams__gt=0),
                 name='battery_weight_null_or_positive',
             ),
             models.CheckConstraint(
-                check=Q(starting_current_a__isnull=True) | Q(starting_current_a__gt=0),
+                condition=Q(starting_current_a__isnull=True) | Q(starting_current_a__gt=0),
                 name='battery_starting_current_null_or_positive',
             ),
             models.CheckConstraint(
-                check=Q(warranty_months__gte=0) & Q(warranty_months__lte=120),
+                condition=Q(warranty_months__gte=0) & Q(warranty_months__lte=120),
                 name='battery_warranty_valid_range',
             ),
         ]
