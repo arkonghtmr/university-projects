@@ -9,6 +9,7 @@ PASSWORD = 'test-password-123'
 
 
 def create_user(username, group_name=None, is_superuser=False):
+    # Создаем обычного пользователя или администратора для проверки прав доступа.
     user_model = get_user_model()
     if is_superuser:
         return user_model.objects.create_superuser(
@@ -23,20 +24,24 @@ def create_user(username, group_name=None, is_superuser=False):
         password=PASSWORD,
     )
     if group_name:
+        # Группа задает роль пользователя в тестах: товаровед или менеджер продаж.
         group, _ = Group.objects.get_or_create(name=group_name)
         user.groups.add(group)
     return user
 
 
 def create_product_specialist(username='specialist'):
+    # Товаровед имеет доступ к созданию, редактированию и удалению товаров.
     return create_user(username, PRODUCT_SPECIALIST_GROUP)
 
 
 def create_sales_manager(username='manager'):
+    # Менеджер продаж имеет доступ к партиям на отправку.
     return create_user(username, SALES_MANAGER_GROUP)
 
 
 def create_battery_type(name='Автомобильный', slug='car'):
+    # Тип аккумулятора нужен как обязательная связь для тестового товара.
     return BatteryType.objects.create(
         name=name,
         slug=slug,
@@ -45,6 +50,7 @@ def create_battery_type(name='Автомобильный', slug='car'):
 
 
 def create_battery(battery_type=None, **overrides):
+    # Базовый тестовый товар с розничной, мелкооптовой и крупнооптовой ценой.
     if battery_type is None:
         battery_type = create_battery_type()
 
@@ -71,6 +77,7 @@ def create_battery(battery_type=None, **overrides):
 
 
 def battery_form_data(battery_type, **overrides):
+    # Данные имитируют POST-запрос из формы создания или редактирования товара.
     data = {
         'sku': 'AKB-FORM-001',
         'name': 'Form Battery',

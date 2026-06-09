@@ -8,6 +8,7 @@ from catalog.views import PRODUCT_SPECIALIST_GROUP, SALES_MANAGER_GROUP
 PASSWORD = 'test-password-123'
 
 
+# Создает пользователя для тестов и при необходимости добавляет его в нужную группу.
 def create_user(username, group_name=None, is_superuser=False):
     user_model = get_user_model()
     if is_superuser:
@@ -28,14 +29,17 @@ def create_user(username, group_name=None, is_superuser=False):
     return user
 
 
+# Быстрый помощник для создания пользователя с правами товароведа.
 def create_product_specialist(username='specialist'):
     return create_user(username, PRODUCT_SPECIALIST_GROUP)
 
 
+# Быстрый помощник для создания пользователя с правами менеджера по продажам.
 def create_sales_manager(username='manager'):
     return create_user(username, SALES_MANAGER_GROUP)
 
 
+# Создает тип аккумулятора, чтобы тестовые товары были связаны с категорией.
 def create_battery_type(name='Автомобильный', slug='car'):
     return BatteryType.objects.create(
         name=name,
@@ -44,6 +48,7 @@ def create_battery_type(name='Автомобильный', slug='car'):
     )
 
 
+# Создает тестовый аккумулятор с рабочими значениями по умолчанию.
 def create_battery(battery_type=None, **overrides):
     if battery_type is None:
         battery_type = create_battery_type()
@@ -70,6 +75,7 @@ def create_battery(battery_type=None, **overrides):
     return Battery.objects.create(**data)
 
 
+# Готовит данные POST-запроса для проверки формы создания и редактирования товара.
 def battery_form_data(battery_type, **overrides):
     data = {
         'sku': 'AKB-FORM-001',

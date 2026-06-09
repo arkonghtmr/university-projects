@@ -1,0 +1,39 @@
+ПЗ7. Необходимые команды
+
+Все команды выполняются из папки ПЗ7.
+Если вы уже находитесь в catalog_project, команду cd можно пропустить.
+
+cd catalog_project
+
+# Сборка Docker-образа Django-приложения
+docker compose build
+
+# Запуск контейнеров web и nginx
+docker compose up -d
+
+# Проверка состояния контейнеров
+docker compose ps
+
+# Проверка доступности приложения через nginx
+curl -I http://127.0.0.1:8087/
+
+# Та же проверка в Windows PowerShell
+Invoke-WebRequest -Uri 'http://127.0.0.1:8087/' -UseBasicParsing
+
+# Проверка, что база данных создана во внешнем Docker volume
+docker compose exec -T web sh -c "ls -l /data && test -f /data/db.sqlite3 && echo DB_FILE_OK"
+
+# Пересборка web-образа нужна, если в requirements.txt недавно добавили flake8
+docker compose build web
+
+# Запуск линтера flake8 в контейнере
+docker compose run --rm web flake8
+
+# Запуск Django-тестов в контейнере
+docker compose run --rm --no-deps --entrypoint= web python manage.py test catalog.tests --verbosity=1
+
+# Просмотр логов контейнеров
+docker compose logs -f
+
+# Остановка контейнеров
+docker compose down

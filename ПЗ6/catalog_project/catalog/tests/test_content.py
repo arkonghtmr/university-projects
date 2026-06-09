@@ -4,9 +4,11 @@ from django.urls import reverse
 from catalog.models import Battery, BatteryType
 
 
+# Тесты контента проверяют, что каталог показывает данные, фильтрует и сортирует их.
 class CatalogContentTests(TestCase):
     @classmethod
     def setUpTestData(cls):
+        # Создаем разные типы аккумуляторов, чтобы проверить фильтр по категории.
         car = BatteryType.objects.create(
             name='Автомобильный',
             slug='car',
@@ -28,6 +30,7 @@ class CatalogContentTests(TestCase):
             description='Аккумуляторы для источников бесперебойного питания.',
         )
 
+        # Набор товаров специально отличается типами, ценами, весом и наличием.
         Battery.objects.create(
             sku='AKB-VARTA-D24',
             name='VARTA Blue Dynamic D24',
@@ -84,17 +87,21 @@ class CatalogContentTests(TestCase):
         )
 
     def product_skus(self, response):
+        # Удобно сравнивать не HTML целиком, а порядок артикулов в queryset.
         return list(response.context['products'].values_list('sku', flat=True))
 
     def ordered_skus(self, *fields):
+        # Ожидаемый порядок строится тем же order_by, что должен использовать каталог.
         return list(Battery.objects.order_by(*fields).values_list('sku', flat=True))
 
     def test_product_list_uses_expected_template(self):
+        # Проверяем, что список товаров рендерится нужным шаблоном.
         response = self.client.get(reverse('product_list'))
 
         self.assertTemplateUsed(response, 'catalog/product_list.html')
 
     def test_product_list_context_contains_products_and_types(self):
+        # В шаблон должны передаваться товары и список типов для фильтра.
         response = self.client.get(reverse('product_list'))
 
         self.assertIn('products', response.context)
@@ -103,12 +110,14 @@ class CatalogContentTests(TestCase):
         self.assertEqual(response.context['battery_types'].count(), 4)
 
     def test_product_list_renders_products_from_database(self):
+        # Страница должна выводить реальные товары, созданные в тестовой БД.
         response = self.client.get(reverse('product_list'))
 
         self.assertContains(response, 'VARTA Blue Dynamic D24')
         self.assertContains(response, 'Xiaomi Redmi Power Bank 20000')
 
     def test_search_filters_products_by_query(self):
+        # Поиск по строке q оставляет только подходящий товар.
         response = self.client.get(reverse('product_list'), {'q': 'VARTA'})
 
         self.assertContains(response, 'VARTA Blue Dynamic D24')
@@ -116,6 +125,7 @@ class CatalogContentTests(TestCase):
         self.assertEqual(self.product_skus(response), ['AKB-VARTA-D24'])
 
     def test_type_filter_shows_only_selected_group(self):
+        # Фильтр type использует slug типа аккумулятора.
         response = self.client.get(reverse('product_list'), {'type': 'aa-aaa'})
 
         self.assertContains(response, 'GP ReCyko AA 2500')
@@ -123,48 +133,56 @@ class CatalogContentTests(TestCase):
         self.assertEqual(self.product_skus(response), ['AKB-GP-AA-2500'])
 
     def test_availability_filter_shows_out_of_stock_products(self):
+        # Фильтр out_of_stock показывает только товары с нулевым остатком.
         response = self.client.get(reverse('product_list'), {'availability': 'out_of_stock'})
 
         self.assertEqual(self.product_skus(response), ['AKB-GP-AA-2500'])
         self.assertContains(response, 'Нет в наличии')
 
     def test_empty_product_list_renders_empty_state(self):
+        # Если фильтры ничего не нашли, пользователь должен увидеть понятное сообщение.
         response = self.client.get(reverse('product_list'), {'q': 'нет-такого-товара'})
 
         self.assertEqual(response.context['products'].count(), 0)
         self.assertContains(response, 'По заданным условиям аккумуляторы не найдены.')
 
     def test_product_list_sorts_by_name_by_default(self):
+        # Без параметра sort каталог сортируется по названию.
         response = self.client.get(reverse('product_list'))
 
         self.assertEqual(response.context['selected_sort'], 'name')
         self.assertEqual(self.product_skus(response), self.ordered_skus('name'))
 
     def test_product_list_sorts_by_required_price_field(self):
+        # Сортировка по цене использует цену и название как дополнительное поле.
         response = self.client.get(reverse('product_list'), {'sort': 'price'})
 
         self.assertEqual(response.context['selected_sort'], 'price')
         self.assertEqual(self.product_skus(response), self.ordered_skus('price', 'name'))
 
     def test_product_list_sorts_by_optional_weight_field(self):
+        # Сортировка по весу должна работать даже для необязательного поля.
         response = self.client.get(reverse('product_list'), {'sort': 'weight'})
 
         self.assertEqual(response.context['selected_sort'], 'weight')
         self.assertEqual(self.product_skus(response), self.ordered_skus('weight_grams', 'name'))
 
     def test_product_list_sorts_by_type_field(self):
+        # Сортировка по типу идет через связанное поле battery_type__name.
         response = self.client.get(reverse('product_list'), {'sort': 'type'})
 
         self.assertEqual(response.context['selected_sort'], 'type')
         self.assertEqual(self.product_skus(response), self.ordered_skus('battery_type__name', 'name'))
 
     def test_unknown_sort_falls_back_to_name(self):
+        # Неверный sort не должен ломать страницу, используется сортировка по умолчанию.
         response = self.client.get(reverse('product_list'), {'sort': 'wrong'})
 
         self.assertEqual(response.context['selected_sort'], 'name')
         self.assertEqual(self.product_skus(response), self.ordered_skus('name'))
 
     def test_filters_and_sort_can_be_combined(self):
+        # Фильтр по наличию и сортировка по цене должны работать одновременно.
         response = self.client.get(
             reverse('product_list'),
             {'availability': 'in_stock', 'sort': 'price'},
@@ -176,6 +194,7 @@ class CatalogContentTests(TestCase):
         )
 
     def test_product_detail_uses_expected_template_and_context(self):
+        # Карточка товара получает конкретный объект product и выводит его характеристики.
         product = Battery.objects.get(sku='AKB-VARTA-D24')
 
         response = self.client.get(reverse('product_detail', args=[product.pk]))
@@ -186,6 +205,7 @@ class CatalogContentTests(TestCase):
         self.assertContains(response, '540 А')
 
     def test_about_uses_expected_template_and_text(self):
+        # About проверяется как публичная статическая страница проекта.
         response = self.client.get(reverse('about'))
 
         self.assertTemplateUsed(response, 'catalog/about.html')

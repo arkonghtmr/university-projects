@@ -15,9 +15,11 @@ from catalog.tests.helpers import (
 )
 
 
+# Тесты ролей проверяют, какие операции доступны гостю, товароведу, менеджеру и админу.
 class RoleAccessTests(TestCase):
     @classmethod
     def setUpTestData(cls):
+        # Подготавливаем один товар и пользователей со всеми ролями из ПЗ6.
         cls.battery_type = create_battery_type()
         cls.product = create_battery(cls.battery_type, sku='AKB-ROLE-001')
         cls.specialist = create_product_specialist()
@@ -25,6 +27,7 @@ class RoleAccessTests(TestCase):
         cls.admin = create_user('admin', is_superuser=True)
 
     def test_guest_can_only_view_catalog_pages(self):
+        # Гость видит публичный каталог, но формы и партии отправляют его на логин.
         list_response = self.client.get(reverse('product_list'))
         detail_response = self.client.get(reverse('product_detail', args=[self.product.pk]))
         create_response = self.client.get(reverse('product_create'))
@@ -38,6 +41,7 @@ class RoleAccessTests(TestCase):
         self.assertIn('/accounts/login/', shipment_response.url)
 
     def test_sales_manager_cannot_manage_catalog_products(self):
+        # Менеджер продаж не является товароведом, поэтому управление товарами запрещено.
         self.client.login(username=self.manager.username, password=PASSWORD)
 
         create_response = self.client.get(reverse('product_create'))
@@ -49,6 +53,7 @@ class RoleAccessTests(TestCase):
         self.assertEqual(delete_response.status_code, 403)
 
     def test_product_specialist_can_create_product(self):
+        # Товаровед может отправить POST-запрос и создать новый товар каталога.
         self.client.login(username=self.specialist.username, password=PASSWORD)
 
         response = self.client.post(
@@ -60,6 +65,7 @@ class RoleAccessTests(TestCase):
         self.assertTrue(Battery.objects.filter(sku='AKB-CREATE-001').exists())
 
     def test_product_specialist_can_update_product_description_and_prices(self):
+        # При редактировании проверяем не только redirect, но и реальные изменения в БД.
         self.client.login(username=self.specialist.username, password=PASSWORD)
 
         response = self.client.post(
@@ -80,6 +86,7 @@ class RoleAccessTests(TestCase):
         self.assertEqual(self.product.price, Decimal('6400.00'))
 
     def test_product_specialist_can_delete_product(self):
+        # Удаление товара проверяется через отсутствие записи после POST-запроса.
         product = create_battery(self.battery_type, sku='AKB-DELETE-001')
         self.client.login(username=self.specialist.username, password=PASSWORD)
 
@@ -89,6 +96,7 @@ class RoleAccessTests(TestCase):
         self.assertFalse(Battery.objects.filter(pk=product.pk).exists())
 
     def test_admin_can_manage_products(self):
+        # Администратор проходит проверки роли и может открыть форму редактирования.
         self.client.login(username=self.admin.username, password=PASSWORD)
 
         response = self.client.get(reverse('product_update', args=[self.product.pk]))
@@ -96,9 +104,11 @@ class RoleAccessTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+# Тесты партий проверяют работу менеджера продаж и расчет итоговой суммы отправки.
 class ShipmentTests(TestCase):
     @classmethod
     def setUpTestData(cls):
+        # Два менеджера нужны, чтобы проверить запрет доступа к чужой партии.
         cls.battery_type = create_battery_type()
         cls.product = create_battery(cls.battery_type, sku='AKB-SHIP-001')
         cls.manager = create_sales_manager('manager-one')
@@ -106,6 +116,7 @@ class ShipmentTests(TestCase):
         cls.admin = create_user('admin', is_superuser=True)
 
     def test_sales_manager_can_create_own_shipment(self):
+        # Новая партия должна автоматически привязаться к текущему менеджеру.
         self.client.login(username=self.manager.username, password=PASSWORD)
 
         response = self.client.post(reverse('shipment_create'))
@@ -115,6 +126,7 @@ class ShipmentTests(TestCase):
         self.assertEqual(shipment.owner, self.manager)
 
     def test_sales_manager_can_add_product_to_own_shipment(self):
+        # При добавлении позиции quantity=5 включает мелкооптовую цену товара.
         shipment = Shipment.objects.create(owner=self.manager)
         self.client.login(username=self.manager.username, password=PASSWORD)
 
@@ -129,6 +141,7 @@ class ShipmentTests(TestCase):
         self.assertEqual(item.unit_price, Decimal('6200.00'))
 
     def test_manager_sees_only_own_shipments(self):
+        # Обычный менеджер не должен видеть партии, созданные другим менеджером.
         own_shipment = Shipment.objects.create(owner=self.manager, title='Своя партия')
         Shipment.objects.create(owner=self.other_manager, title='Чужая партия')
         self.client.login(username=self.manager.username, password=PASSWORD)
@@ -139,6 +152,7 @@ class ShipmentTests(TestCase):
         self.assertNotContains(response, 'Чужая партия')
 
     def test_one_manager_cannot_change_another_manager_shipment(self):
+        # Чужую партию нельзя открыть, пополнить или изменить удалением позиции.
         shipment = Shipment.objects.create(owner=self.manager)
         item = ShipmentItem.objects.create(shipment=shipment, product=self.product, quantity=3)
         self.client.login(username=self.other_manager.username, password=PASSWORD)
@@ -158,6 +172,7 @@ class ShipmentTests(TestCase):
         self.assertEqual(shipment.items.count(), 1)
 
     def test_admin_can_open_any_manager_shipment(self):
+        # Администратор не ограничен владельцем партии.
         shipment = Shipment.objects.create(owner=self.manager)
         self.client.login(username=self.admin.username, password=PASSWORD)
 
@@ -166,6 +181,7 @@ class ShipmentTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_shipment_total_uses_wholesale_prices_and_additional_discount(self):
+        # Проверяем розничную, мелкооптовую и крупнооптовую цены в одной партии.
         shipment = Shipment.objects.create(
             owner=self.manager,
             additional_discount_percent=Decimal('10.00'),
@@ -179,6 +195,7 @@ class ShipmentTests(TestCase):
         self.assertEqual(shipment.total, Decimal('151650.00'))
 
     def test_sales_manager_can_update_additional_discount(self):
+        # Менеджер может изменить название партии и дополнительную скидку через форму.
         shipment = Shipment.objects.create(owner=self.manager)
         self.client.login(username=self.manager.username, password=PASSWORD)
 
